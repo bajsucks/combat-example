@@ -1,4 +1,4 @@
-# $name
+# Example combat game
 
 That's an ECS game
 

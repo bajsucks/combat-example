@@ -1,5 +1,5 @@
 {
-  "name": "$name",
+  "name": "Example combat game",
   "tree": {
     "$className": "DataModel",
     "ReplicatedFirst": {
