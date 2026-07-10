@@ -1,0 +1,57 @@
+{
+  "name": "$name",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedFirst": {
+      "$path": "src/ReplicatedFirst"
+    },
+    "ReplicatedStorage": {
+      "Components": {
+        "$path": "src/Shared/Components"
+      },
+      "Systems": {
+        "$path": "src/Shared/Systems"
+      },
+      "Factories": {
+        "$path": "src/Shared/Factories"
+      },
+      "Constants": {
+        "$path": "src/Shared/Constants"
+      },
+      "Modules": {
+        "$path": "src/Shared/Modules"
+      },
+      "Remotes": {
+        "$path": "src/Remotes"
+      },
+      "Packages": {
+        "$path": "src/Packages"
+      }
+    },
+    "ServerScriptService": {
+      "$path": "src/Server/Scripts"
+    },
+    "ServerStorage": {
+      "Factories": {
+        "$path": "src/Server/Factories"
+      },
+      "Systems": {
+        "$path": "src/Server/Systems"
+      },
+      "Constants": {
+        "$path": "src/Server/Constants"
+      },
+      "Modules": {
+        "$path": "src/Server/Modules"
+      },
+      "Inputs": {
+        "$path": "src/Server/Inputs"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/Client"
+      }
+    }
+  }
+}
