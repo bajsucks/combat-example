@@ -571,4 +571,9 @@ function Util.Ranges(str:string)
     end
 end
 
+function Util.GetGUID(wrapInCurly:boolean?)
+	local HttpService = game:GetService("HttpService")
+	return HttpService:GenerateGUID(wrapInCurly)
+end
+
 return Util
