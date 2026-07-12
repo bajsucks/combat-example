@@ -43,4 +43,4 @@ Players.PlayerRemoving:Connect(function(Player: Player)
 	end
 end)
 
-return ClientInput
+return {}

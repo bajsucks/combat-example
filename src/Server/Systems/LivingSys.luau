@@ -10,7 +10,7 @@ local DamageQuery = world:query(LivingCom.Health, LivingCom.QDamage):without(Liv
 local HealQuery = world:query(LivingCom.Health, LivingCom.MaxHealth, LivingCom.QHeal):without(LivingCom.IsDead):cached()
 
 local DeadQueue = {}
-return function()
+return {function()
 	for e, Health: number, MaxHealth: number, QHeal: { number } in HealQuery do
 		for _, HealVal in QHeal do
 			Health = math.min(Health + HealVal, MaxHealth)
@@ -37,4 +37,4 @@ return function()
 		end
 		table.clear(DeadQueue)
 	end
-end
+end, -1, "postsim"}

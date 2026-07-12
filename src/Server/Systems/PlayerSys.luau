@@ -69,4 +69,4 @@ ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 	LivingFac.new(e)
 end)
 
-return function() end
+return {}

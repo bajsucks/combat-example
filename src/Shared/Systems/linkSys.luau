@@ -207,8 +207,8 @@ local function Physic()
 	end
 end
 
-return function()
+return {function()
 	Resolver()
 	Kinematic()
 	Physic()
-end
+end, -100, "presim"}

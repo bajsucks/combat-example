@@ -15,7 +15,7 @@ local Interrupted = world:query(AttackCom.Threads):with(AttackCom.Interrupt):cac
 
 local KeybindQuery = world:query(InputCom.source, InputCom.Keybind):cached()
 
-return function()
+return {function()
     for _: jecs.Entity, source: jecs.Entity, Keybind: string in KeybindQuery do
         if world:has(source, AttackCom.Stunned) or world:has(source, AttackCom.Blocking) or world:has(source, AttackCom.InAttack) then continue end
         local Character = world:get(source, AttackCom.Character)
@@ -44,4 +44,4 @@ return function()
         end
         world:remove(e, AttackCom.Threads)
     end
-end
+end, -1, "postsim"}

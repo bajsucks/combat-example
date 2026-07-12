@@ -13,7 +13,7 @@ local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world: jecs.World = WorldProvider.Get("Main")
 local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
-return function()
+return {function()
 	for e: jecs.Entity in world:query(table.unpack(Groups.ValidPlayer)):without(PlayerCom.Handled) do -- players that were just replicated
 		world:add(e, PlayerCom.Handled)
 		local userId = world:get(e, PlayerCom.UserId)
@@ -30,4 +30,4 @@ return function()
 			world:set(e, link.View, Char)
 		end)
 	end
-end
+end, -1, "prerender"}

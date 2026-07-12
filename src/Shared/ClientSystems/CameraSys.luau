@@ -13,7 +13,7 @@ local world = WorldProvider.Get("Main")
 local shakeOffset = Vector3.new()
 local shakeTick = 0
 
-return function(dt: number)
+return {function(dt: number)
 	local player = Players.LocalPlayer
 	if not player then
 		return
@@ -88,4 +88,4 @@ return function(dt: number)
 		camera.CFrame += shakeOffset
 		world:remove(e, CameraCom.UpdateQueued)
 	end
-end
+end, -1, "prerender"}

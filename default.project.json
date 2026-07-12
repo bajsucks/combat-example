@@ -12,6 +12,9 @@
       "Systems": {
         "$path": "src/Shared/Systems"
       },
+      "ClientSystems": {
+        "$path": "src/Shared/ClientSystems"
+      },
       "Factories": {
         "$path": "src/Shared/Factories"
       },

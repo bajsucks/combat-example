@@ -26,36 +26,58 @@ do
 end
 
 local Relay = require(ReplicatedStorage.Modules.Relay)
-local linkSys = require(ReplicatedStorage.Systems.linkSys)
-local SM = require(ReplicatedStorage.Systems.SM)
 
 -- simulation and order
 if RunService:IsClient() then
-	local PlayerReplicateSys = require(ReplicatedStorage.Systems.PlayerReplicateSys)
-	local CameraSys = require(ReplicatedStorage.Systems.CameraSys)
-	local DebugSys = require(ReplicatedStorage.Systems.DebugSys)
 	local Input = require(ReplicatedStorage.Modules.Input)
-	require(ReplicatedStorage.Systems.RegisterInputSys)
 
-	RunService.PreSimulation:Connect(function(dt)
+	local tbl = {}
+	local function get(Inst)
+		if Inst:IsA("ModuleScript") then
+			local fn, priority, phase = table.unpack(require(Inst))
+			if not fn then return end
+			tbl[phase] = tbl[phase] or {}
+			table.insert(tbl[phase], {fn, priority})
+		end
+	end
+	for _, Inst in ReplicatedStorage.ClientSystems:GetChildren() do
+		get(Inst)
+	end
+	for _, Inst in ReplicatedStorage.Systems:GetChildren() do
+		get(Inst)
+	end
+	for _, phase in tbl do
+		table.sort(phase, function(a, b) return a[2] < b[2]  end)
+	end
+	RunService.PreRender:Connect(function(dt: number)
 		Input.update(dt)
-
-		Input.runPhase("Main", function()
-			linkSys()
-			PlayerReplicateSys()
-			DebugSys()
-			CameraSys(dt)
-			SM.Process()
+		Input.runPhase("PreRender", function()
+			for _, fntbl in tbl.prerender do
+				fntbl[1](dt)
+			end
 		end)
 	end)
-
+	RunService.PreSimulation:Connect(function(dt: number)
+		Input.runPhase("PreSimulation", function()
+			for _, fntbl in tbl.presim do
+				fntbl[1](dt)
+			end
+		end)
+	end)
+	RunService.PostSimulation:Connect(function(dt: number)
+		Input.runPhase("PostSimulation", function()
+			for _, fntbl in tbl.postsim do
+				fntbl[1](dt)
+			end
+			for _, fntbl in tbl.postreplication do
+				fntbl[1](dt)
+			end
+		end)
+	end)
 	ReplicatedStorage.Remotes.ReplicateTCP.OnClientEvent:Connect(Relay.ApplyTCP)
 	ReplicatedStorage.Remotes.ReplicateUDP.OnClientEvent:Connect(Relay.ApplyUDP)
 else
 	local env_server = require(ServerStorage.Constants.env_server)
-
-	local PlayerSys = require(ServerStorage.Systems.PlayerSys)
-
 	local TotalDt = 0
 	local function Replicate()
 		if env_server.replication_throttle then
@@ -69,16 +91,38 @@ else
 			Relay.SendUDP()
 		end
 	end
-
-	RunService.PreSimulation:Connect(function()
-		linkSys()
+	local tbl = {}
+	local function get(Inst)
+		if Inst:IsA("ModuleScript") then
+			local fn, priority, phase = table.unpack(require(Inst))
+			if not fn then return end
+			tbl[phase] = tbl[phase] or {}
+			table.insert(tbl[phase], {fn, priority})
+		end
+	end
+	for _, Inst in ServerStorage.Systems:GetChildren() do
+		get(Inst)
+	end
+	for _, Inst in ReplicatedStorage.Systems:GetChildren() do
+		get(Inst)
+	end
+	for _, phase in tbl do
+		table.sort(phase, function(a, b) return a[2] < b[2]  end)
+	end
+	RunService.PreSimulation:Connect(function(dt: number)
+		for _, fntbl in tbl.presim do
+			fntbl[1](dt)
+		end
 	end)
-
-	RunService.PostSimulation:Connect(function(dt)
+	RunService.PostSimulation:Connect(function(dt: number)
 		TotalDt += dt
-		PlayerSys()
+		for _, fntbl in tbl.postsim do
+			fntbl[1](dt)
+		end
 		Replicate()
-		SM.Process()
+		for _, fntbl in tbl.postreplication do
+			fntbl[1](dt)
+		end
 	end)
 end
 
