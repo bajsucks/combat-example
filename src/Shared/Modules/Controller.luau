@@ -55,7 +55,6 @@ else
 	local env_server = require(ServerStorage.Constants.env_server)
 
 	local PlayerSys = require(ServerStorage.Systems.PlayerSys)
-	local ClientInput = require(ServerStorage.Systems.ClientInput)
 
 	local TotalDt = 0
 	local function Replicate()
@@ -78,7 +77,6 @@ else
 	RunService.PostSimulation:Connect(function(dt)
 		TotalDt += dt
 		PlayerSys()
-		ClientInput.ProcessInputs()
 		Replicate()
 		SM.Process()
 	end)
