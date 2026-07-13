@@ -4,6 +4,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 local Logger = require(ReplicatedStorage.Modules.Logger)
+local entities = Instance.new("Folder")
+local visuals = Instance.new("Folder")
+entities.Parent = workspace
+visuals.Parent = workspace
 
 local function p(s: string)
 	Logger.print("Server:", s)
