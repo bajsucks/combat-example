@@ -1,16 +1,12 @@
 local ClientInput = {}
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local InputCom = require(ReplicatedStorage.Components.InputCom)
 local InputConfig = require(ReplicatedStorage.Constants.InputConfig)
 local InputRemote = ReplicatedStorage.Remotes.Input
-
-local jecs = require(ReplicatedStorage.Packages.jecs)
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world = WorldProvider:Get("Main")
 local Indexer = require(ReplicatedStorage.Modules.Indexer)
+local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
 local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
 function ClientInput.OnInput(Player: Player, ActionId: number, Input: Enum.KeyCode)
@@ -20,27 +16,23 @@ function ClientInput.OnInput(Player: Player, ActionId: number, Input: Enum.KeyCo
 	if typeof(InputKey) ~= "string" then
 		error("ARGH!")
 	end
+	local tbl = world:get(e, PlayerCom.Inputs)
+	if not tbl and ActionId == InputConfig.ActionIds.Begin then
+		tbl = {}
+		world:set(e, PlayerCom.Inputs, tbl)
+	elseif not tbl then
+		return
+	end
 	if ActionId == InputConfig.ActionIds.Begin then
-		local IE = world:entity()
-		world:set(IE, InputCom.source, e)
-		world:set(IE, InputCom.Keybind, InputKey)
+		tbl[InputKey] = true
 	elseif ActionId == InputConfig.ActionIds.End then
-		for IE: jecs.Entity, source: jecs.Entity, Keybind: string in world:query(InputCom.source, InputCom.Keybind) do
-			if world:get(source, PlayerCom.Player) == Player and Keybind == InputKey then
-				world:delete(IE)
-			end
+		tbl[InputKey] = nil
+		if jUtil.DictCount(tbl) <= 0 then
+			world:remove(e, PlayerCom.Inputs)
 		end
 	end
 end
 
 InputRemote.OnServerEvent:Connect(ClientInput.OnInput)
-
-Players.PlayerRemoving:Connect(function(Player: Player)
-	for IE: jecs.Entity, source: jecs.Entity in world:query(InputCom.source) do
-		if world:get(source, PlayerCom.Player) == Player then
-			world:delete(IE)
-		end
-	end
-end)
 
 return {}

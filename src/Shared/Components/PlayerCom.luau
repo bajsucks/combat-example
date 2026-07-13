@@ -11,6 +11,7 @@ local Replicated = {
 	-- Components
 	UserId = world:component() :: jecs.Entity<number>,
 	Player = world:component() :: jecs.Entity<Player>,
+	Inputs = world:component() :: jecs.Entity<{[string]: boolean}>,
 	-- Tags
 	IsLoaded = world:entity() :: jecs.Entity<nil>,
 }

@@ -114,7 +114,6 @@ local parts, cframes = {}, {}
 -- synchronizes view instances to the value of linked components
 local function HandleKinematic(e, cache: link.ChildCache)
 	local inst: Instance, prop: string, targetCom, pivotOffset = cache[1], cache[2], cache[3], cache[4]
-	--print(inst, prop, targetCom) -- only prints red, CFrame, 14
 	if not inst.Parent then
 		world:remove(e, pair(link.KinematicCache, targetCom))
 		return
@@ -142,16 +141,6 @@ local function HandleKinematic(e, cache: link.ChildCache)
 	end
 end
 local function Kinematic()
-	-- for e in KinematicQuery do
-	--     local com = world:target(e, link.KinematicCache)
-	--     local nth = 0
-	--     while com do
-	--         nth += 1
-	--         local cache = world:get(e, pair(link.KinematicCache, com))
-	--         print(e, cache[2], cache)
-	--         com = world:target(e, link.KinematicCache, nth)
-	--     end
-	-- end
 	for e in KinematicQuery do
 		local com = world:target(e, link.KinematicCache)
 		local nth = 0

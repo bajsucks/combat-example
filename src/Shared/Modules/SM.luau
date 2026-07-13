@@ -117,6 +117,7 @@ function SM.Rm(e: jecs.Entity, StateId: string)
 end
 
 function SM.Process()
+	local clock = os.clock()
 	for e: jecs.Entity, States: {} in SM.States do
 		for StateId: string, State: {} in States do
 			if State.CheckFn and not State.CheckFn(e) then
@@ -124,7 +125,7 @@ function SM.Process()
 				continue
 			end
 			if State.TimeGoal then
-				if os.clock() > State.TimeGoal then
+				if clock > State.TimeGoal then
 					SM.Rm(e, StateId)
 					continue
 				end
