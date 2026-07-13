@@ -46,9 +46,6 @@
       },
       "Modules": {
         "$path": "src/Server/Modules"
-      },
-      "Inputs": {
-        "$path": "src/Server/Inputs"
       }
     },
     "StarterPlayer": {
