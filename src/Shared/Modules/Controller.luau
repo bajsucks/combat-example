@@ -31,7 +31,7 @@ local Relay = require(ReplicatedStorage.Modules.Relay)
 if RunService:IsClient() then
 	local Input = require(ReplicatedStorage.Modules.Input)
 
-	local tbl = {}
+	local tbl = {prerender = {}, presim = {}, postsim = {}, postreplication = {}}
 	local function get(Inst)
 		if Inst:IsA("ModuleScript") then
 			local fn, priority, phase = table.unpack(require(Inst))
@@ -91,7 +91,7 @@ else
 			Relay.SendUDP()
 		end
 	end
-	local tbl = {}
+	local tbl = {prerender = {}, presim = {}, postsim = {}, postreplication = {}}
 	local function get(Inst)
 		if Inst:IsA("ModuleScript") then
 			local fn, priority, phase = table.unpack(require(Inst))

@@ -22,7 +22,9 @@ local Replicated = {
 local Static = {
     -- Components
     Threads = world:component() :: jecs.Entity<{[string]: AAT}>,
-    Character = world:component() :: jecs.Entity<string>,
+    Fighter = world:component() :: jecs.Entity<string>,
+
+    m1Combo = world:component() :: jecs.Entity<{number}>,
     -- Tags
     Blocking = world:entity() :: jecs.Entity<nil>,
     Parry = world:entity() :: jecs.Entity<nil>,

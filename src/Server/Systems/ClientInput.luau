@@ -4,7 +4,7 @@ local InputConfig = require(ReplicatedStorage.Constants.InputConfig)
 local InputRemote = ReplicatedStorage.Remotes.Input
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
-local world = WorldProvider:Get("Main")
+local world = WorldProvider.Get("Main")
 local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
 

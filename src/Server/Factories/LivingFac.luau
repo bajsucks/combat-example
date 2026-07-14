@@ -2,18 +2,19 @@ local Fac = {}
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LivingCom = require(ReplicatedStorage.Components.LivingCom)
-local link = require(ReplicatedStorage.Components.link)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world: jecs.World = WorldProvider.Get("Main")
 local mirrorTCP = WorldProvider.GetMirror("Main", "TCP")
 local Indexer = require(ReplicatedStorage.Modules.Indexer)
+local Logger = require(ReplicatedStorage.Modules.Logger)
 local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
 local LivingIndex = Indexer.new(LivingCom.LivingGuid)
 
 type Config = {
 	MaxHealth: number?,
+	View: Instance
 }
 
 --[[
@@ -22,14 +23,17 @@ type Config = {
 function Fac.new(e: jecs.Entity?, config: Config?)
 	config = config or {}
 	e = e or world:entity()
-	world:set(e, LivingCom.Health, config.MaxHealth or 100)
-	world:set(e, LivingCom.MaxHealth, config.MaxHealth or 100)
+	local View = config.View
+	if not View then
+		Logger.warn("Tried to summon a living without a view!")
+		return e
+	end
+	local MaxHealth = config.MaxHealth or 100
+	world:set(e, LivingCom.Health, MaxHealth)
+	world:set(e, LivingCom.MaxHealth, MaxHealth)
 	world:set(e, LivingCom.QDamage, {})
 	world:set(e, LivingCom.QHeal, {})
-	local View = world:get(e, link.View)
-	if View then
-		View.Parent = workspace.entities
-	end
+	View.Parent = workspace.entities
 	local guid = jUtil.GetGUID()
 	world:set(e, LivingCom.LivingGuid, jUtil.GetGUID())
 	View:SetAttribute("LivingGuid", guid)

@@ -1,10 +1,9 @@
---!nocheck
--- ^ type checker is being dumb there for whatever reason, giving blocked for some variables
+--!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LivingCom = require(ReplicatedStorage.Components.LivingCom)
-local jecs = require(ReplicatedStorage.Packages.jecs)
-local world: jecs.World = table.unpack(require(ReplicatedStorage.Modules.WorldProvider))
+local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
+local world = WorldProvider.Get("Main")
 
 local DamageQuery = world:query(LivingCom.Health, LivingCom.QDamage):without(LivingCom.IsDead):cached()
 local HealQuery = world:query(LivingCom.Health, LivingCom.MaxHealth, LivingCom.QHeal):without(LivingCom.IsDead):cached()

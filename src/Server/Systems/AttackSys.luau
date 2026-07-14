@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 
 local AttackCom = require(ReplicatedStorage.Components.AttackCom)
-local InputCom = require(ReplicatedStorage.Components.InputCom)
+local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 
@@ -11,18 +11,22 @@ local world: jecs.World = WorldProvider.Get("Main")
 
 type AAT = AttackCom.AAT
 
-local Interrupted = world:query(AttackCom.Threads):with(AttackCom.Interrupt):cached()
+local Interrupted = world   :query(AttackCom.Threads)
+                            :with(AttackCom.Interrupt):cached()
 
-local KeybindQuery = world:query(InputCom.source, InputCom.Keybind):cached()
+local KeybindQuery = world  :query(PlayerCom.Inputs, AttackCom.Fighter)
+                            :without(AttackCom.Blocking, AttackCom.Stunned, AttackCom.InAttack):cached()
 
 return {function()
-    for _: jecs.Entity, source: jecs.Entity, Keybind: string in KeybindQuery do
-        if world:has(source, AttackCom.Stunned) or world:has(source, AttackCom.Blocking) or world:has(source, AttackCom.InAttack) then continue end
-        local Character = world:get(source, AttackCom.Character)
-        if not Character then continue end
-        local maps: Folder = ServerStorage.Constants.AttackMaps:FindFirstChild(Character)
+    for e: jecs.Entity, Inputs: {[string]: boolean}, Fighter: string in KeybindQuery do
+        local Keybind = next(Inputs)
+        if not Fighter then
+            Logger.warn("No fighter son")
+            continue
+        end
+        local maps: Folder = ServerStorage.Constants.AttackMaps:FindFirstChild(Fighter)
         if not maps then
-            Logger.warn(`Tried to use an attack map that does not exist! Map character: {Character}`)
+            Logger.warn(`Tried to use an attack map that does not exist! Map fighter: {Fighter}`)
             continue
         end
         local map = maps:FindFirstChild(Keybind)
@@ -30,7 +34,7 @@ return {function()
             Logger.warn(`Tried to use an attack map that does not exist! Map: {Keybind}`)
             continue
         end
-        task.defer(map, source)
+        task.defer(require(map), e)
     end
     for e: jecs.Entity, AATs: {[string]: AAT} in Interrupted do
         for _, AAT: AAT in AATs do

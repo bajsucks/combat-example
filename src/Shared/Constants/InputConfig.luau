@@ -11,7 +11,7 @@ Config.Keybindings = {
 }
 Config.NetworkedBinds = {
 	-- [Enum.KeyCode.Q] = "q",
-	-- [Enum.KeyCode.R] = "r",
+	[Enum.KeyCode.R] = "r",
 	-- [Enum.KeyCode.T] = "t",
 	-- [Enum.KeyCode.Z] = "z",
 	-- [Enum.KeyCode.X] = "x",
