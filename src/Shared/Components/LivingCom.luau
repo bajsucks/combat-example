@@ -16,6 +16,7 @@ local Replicated = {
 }
 local Static = {
 	-- Components
+	LivingGuid = world:component() :: jecs.Entity<string>,
 	QDamage = world:component() :: jecs.Entity<{ number }>,
 	QHeal = world:component() :: jecs.Entity<{ number }>,
 	-- Tags

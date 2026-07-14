@@ -3,10 +3,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local CameraCom = require(ReplicatedStorage.Components.CameraCom)
-local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
-local Indexer = require(ReplicatedStorage.Modules.Indexer)
+local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 
-local UserIdIndex = Indexer.new(PlayerCom.UserId)
 local world = WorldProvider.Get("Main")
 
 local shakeOffset = Vector3.new()
@@ -18,7 +16,7 @@ return {function(dt: number)
     local camera = workspace.CurrentCamera
     if not (char and camera) then return end
 
-    local e = UserIdIndex:First(player.UserId)
+    local e = IndexerUtils.PlayerByUserId(player.UserId)
     if not e then return end
 
     local LookAtPos = world:get(e, CameraCom.LookAt)

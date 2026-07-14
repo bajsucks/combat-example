@@ -4,6 +4,7 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local LivingFac = require(ServerStorage.Factories.LivingFac)
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
+local link = require(ReplicatedStorage.Components.link)
 local Indexer = require(ReplicatedStorage.Modules.Indexer)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local Relay = require(ReplicatedStorage.Modules.Relay)
@@ -66,6 +67,17 @@ ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 	local Name = Player.DisplayName == Player.Name and Player.DisplayName or `{Player.DisplayName} ({Player.Name})`
 	Logger.print(`Player {Name} was hydrated successfully`)
 	world:add(e, PlayerCom.Hydrated)
+	local c = Player.CharacterAdded:Connect(function(Char)
+		world:set(e, link.View, Char)
+	end)
+	if Player.Character then
+		world:set(e, link.View, Player.Character)
+	end
+	Players.PlayerRemoving:Once(function(p)
+		if p == Player then
+			c:Disconnect()
+		end
+	end)
 	LivingFac.new(e)
 end)
 

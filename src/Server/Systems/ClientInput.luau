@@ -5,12 +5,11 @@ local InputRemote = ReplicatedStorage.Remotes.Input
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world = WorldProvider:Get("Main")
-local Indexer = require(ReplicatedStorage.Modules.Indexer)
+local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
-local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
 function ClientInput.OnInput(Player: Player, ActionId: number, Input: Enum.KeyCode)
-	local e = UserIdIndex:First(Player.UserId)
+	local e = IndexerUtils.PlayerByUserId(Player.UserId)
 	if not e then return end
 	local InputKey = typeof(Input) ~= "EnumItem" and Input or InputConfig.NetworkedBinds[Input]
 	if typeof(InputKey) ~= "string" then
