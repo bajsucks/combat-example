@@ -1,27 +1,14 @@
 local Config = {}
 
 Config.Keybindings = {
-	[Enum.KeyCode.W] = "w",
-	[Enum.KeyCode.A] = "a",
-	[Enum.KeyCode.S] = "s",
-	[Enum.KeyCode.D] = "d",
-	[Enum.KeyCode.H] = "h",
-	[Enum.KeyCode.Space] = "space",
-	[Enum.KeyCode.ButtonA] = "buttonA",
-}
-Config.NetworkedBinds = {
-	-- [Enum.KeyCode.Q] = "q",
+	[Enum.UserInputType.MouseButton1] = "m1",
+	[Enum.UserInputType.MouseButton2] = "m2",
 	[Enum.KeyCode.R] = "r",
-	-- [Enum.KeyCode.T] = "t",
-	-- [Enum.KeyCode.Z] = "z",
-	-- [Enum.KeyCode.X] = "x",
-	-- [Enum.KeyCode.C] = "c",
-	-- [Enum.KeyCode.V] = "v",
+	[Enum.KeyCode.H] = "h",
 }
 
 Config.Actions = {
 	boolean = {
-		jump = { "space", "buttonA" },
 		StaticCamera = { "h" },
 	},
 	value2d = {

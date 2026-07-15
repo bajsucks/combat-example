@@ -2,8 +2,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local UserInputService = game:GetService("UserInputService")
 
+local InputCom = require(ReplicatedStorage.Components.InputCom)
+local IndexerUtils = require(script.Parent.IndexerUtils)
 local InputConfig = require(ReplicatedStorage.Constants.InputConfig)
+local jecs = require(ReplicatedStorage.Packages.jecs)
 local UserGameSettings = UserSettings():GetService("UserGameSettings")
+local WorldProvider = require(script.Parent.WorldProvider)
+local world = WorldProvider.Get("Main")
 
 local rawInput = {
 	mouseDelta = Vector2.zero,
@@ -16,16 +21,25 @@ for _, name in InputConfig.Keybindings do
 	rawInput[name] = false
 end
 
-UserInputService.InputBegan:Connect(function(input, sink)
+local function InputSwitch(input:InputObject, sink, state)
 	if sink then
 		return
 	end
+	local e = IndexerUtils.LocalPlayer()
 
 	local rawName = InputConfig.Keybindings[input.KeyCode]
+	rawName = rawName or InputConfig.Keybindings[input.UserInputType]
 	if rawName then
-		rawInput[rawName] = true
+		rawInput[rawName] = state
+		if state then
+			world:add(e, jecs.pair(InputCom.Pressing, InputCom[rawName]))
+		else
+			world:remove(e, jecs.pair(InputCom.Pressing, InputCom[rawName]))
+		end
 	end
-end)
+end
+UserInputService.InputBegan:Connect(function(input, sink) InputSwitch(input, sink, true) end)
+UserInputService.InputEnded:Connect(function(input, sink) InputSwitch(input, sink, false) end)
 
 UserInputService.InputChanged:Connect(function(input, sink)
 	if sink then
@@ -37,17 +51,6 @@ UserInputService.InputChanged:Connect(function(input, sink)
 		rawInput.leftThumbstickDelta = Vector2.new(input.Position.X, input.Position.Y)
 	elseif input.KeyCode == Enum.KeyCode.Thumbstick2 then
 		rawInput.rightThumbstickDelta = Vector2.new(input.Position.X, input.Position.Y)
-	end
-end)
-
-UserInputService.InputEnded:Connect(function(input, sink)
-	if sink then
-		return
-	end
-
-	local rawName = InputConfig.Keybindings[input.KeyCode]
-	if rawName then
-		rawInput[rawName] = false
 	end
 end)
 

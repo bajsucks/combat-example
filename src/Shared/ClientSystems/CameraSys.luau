@@ -16,7 +16,7 @@ return {function(dt: number)
     local camera = workspace.CurrentCamera
     if not (char and camera) then return end
 
-    local e = IndexerUtils.PlayerByUserId(player.UserId)
+    local e = IndexerUtils.LocalPlayer()
     if not e then return end
 
     local LookAtPos = world:get(e, CameraCom.LookAt)
