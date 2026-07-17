@@ -8,5 +8,6 @@ return {
 		-- 0: only logs
 		-- 1: include the script name and line number
 		-- 2: include the entire call stack
-	}
+	},
+	MaxSaneVelocity = 30, -- used in combat sanity checks
 }

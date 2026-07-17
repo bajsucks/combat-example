@@ -31,4 +31,4 @@ Contains modules:
 - [Conch](https://github.com/alicesaidhi/conch)
 - [Jabby](https://github.com/alicesaidhi/jabby/)
 - [Hammer](https://github.com/Mark-Marks/hammer)
-- [HitboxClass](https://github.com/RedTrioVirus/HitboxClass) V1.1A
+- [EZHitbox](https://github.com/Breezy1214/EZ-Hitbox) V5.0.0

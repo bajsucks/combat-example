@@ -21,4 +21,8 @@ function module.LivingByView(View:Instance)
     return LivingIndex:First(Guid)
 end
 
+function module.LivingByGuid(Guid:string)
+    return LivingIndex:First(Guid)
+end
+
 return module
