@@ -6,6 +6,7 @@ local link = require(ReplicatedStorage.Components.link)
 local env = require(ReplicatedStorage.Constants.env)
 local DamageFac = require(ReplicatedStorage.Factories.DamageFac)
 local EZHitbox = require(ReplicatedStorage.Packages.EZHitbox)
+local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
 local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 local Logger = require(script.Parent.Logger)
@@ -110,6 +111,18 @@ function module.ReplicatedHitbox(Player: Player, Move:string, HitboxN: number, H
         local params = Map.Hitboxes[HitboxN]
         DamageFac.new({source = source, damage = params.Damage})
     end
+end
+
+function module.ConnectInterrupt(j: Janitor.Janitor, thread: thread)
+    local Cleanup = world:added(AttackCom.Interrupt, function()
+        j:Destroy()
+        if coroutine.status(thread) == "suspended" then
+            coroutine.close(thread)
+        elseif coroutine.status(thread) ~= "dead" then
+            Logger.warn("Failed to close thread during interrupt!!!!!!!")
+        end
+    end)
+    j:Add(Cleanup, true)
 end
 
 return module

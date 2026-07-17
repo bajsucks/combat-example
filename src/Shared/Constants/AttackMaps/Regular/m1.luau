@@ -69,16 +69,9 @@ function module.Attack(source: jecs.Entity, Replicated:boolean)
         if RunService:IsServer() then
             world:remove(source, AttackCom.InAttack)
         end
+        j:Destroy()
     end)
-    function Interrupt()
-        j:Cleanup()
-        if coroutine.status(thread) == "suspended" then
-            coroutine.close(thread)
-        elseif coroutine.status(thread) ~= "dead" then
-            Logger.warn("Failed to close thread during interrupt!!!!!!!")
-        end
-    end
-    -- TODO: connect interrupt here
+    AttackUtils.ConnectInterrupt(j, thread)
 end
 
 return module
