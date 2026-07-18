@@ -26,4 +26,5 @@ if Logger.isDebug() then
 	p("Loading Conch")
 	local conch = require(ReplicatedStorage.Packages.conch)
 	conch.initiate_default_lifecycle()
+	conch.set_role_permissions("admin", "super-user")
 end

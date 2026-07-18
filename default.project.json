@@ -29,6 +29,12 @@
       },
       "Packages": {
         "$path": "src/Packages"
+      },
+      "Assets": {
+        "$path": "src/Assets"
+      },
+      "ConchCommands": {
+        "$path": "src/Shared/ConchCommands"
       }
     },
     "ServerScriptService": {

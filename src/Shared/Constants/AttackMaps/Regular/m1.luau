@@ -4,7 +4,6 @@ local AttackCom = require(ReplicatedStorage.Components.AttackCom)
 local link = require(ReplicatedStorage.Components.link)
 local DamageFac = require(ReplicatedStorage.Factories.DamageFac)
 local AttackUtils = require(ReplicatedStorage.Modules.AttackUtils)
-local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
@@ -18,7 +17,7 @@ module.Hitboxes = {
     {
         Damage = 5,
         Size = Vector3.one*3,
-        Offset = Vector3.zAxis*-3.5
+        Offset = -Vector3.zAxis*3.5
     }
 }
 
@@ -38,11 +37,9 @@ local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: b
     local hits = {}
     for _, v in p do
         if v == View then continue end
-        local e = IndexerUtils.LivingByView(v)
-        if not e then continue end
         local guid = View:GetAttribute("LivingGuid")
-        if not guid then continue end
-        print("DAMAGE", View.Name)
+        if not guid then Logger.warn("No living GUID"); continue end
+        Logger.print("DAMAGE", v.Name)
         DamageFac.new({source = source, damage = params.Damage})
         table.insert(hits, guid)
     end
@@ -54,7 +51,6 @@ local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: b
 end
 
 function module.Attack(source: jecs.Entity, Replicated:boolean)
-    print("Attack began")
     world:add(source, AttackCom.InAttack)
     local View = world:get(source, link.View)
     local j = Janitor.new()
@@ -65,7 +61,6 @@ function module.Attack(source: jecs.Entity, Replicated:boolean)
         task.wait(0.05)
         hitbox(source, View, 1, Replicated)
         task.wait(0.05)
-        print("Attack ended")
         if RunService:IsServer() then
             world:remove(source, AttackCom.InAttack)
         end

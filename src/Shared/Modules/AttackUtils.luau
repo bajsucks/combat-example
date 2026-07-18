@@ -103,12 +103,14 @@ function module.ReplicatedWindup(Player: Player, Move:string)
 end
 
 function module.ReplicatedHitbox(Player: Player, Move:string, HitboxN: number, Hits: {string})
+    if not Move or not HitboxN or not Hits or #Hits == 0 then return end
     local source: jecs.Entity = IndexerUtils.PlayerByUserId(Player.UserId)
-    if not source or not Move or not HitboxN or not Hits then return end
+    if not source then return end
     if module.Sanitycheck(source, Move, HitboxN, Hits) then
         local Map = module.GetMap(source, Move)
         if not Map then return end
         local params = Map.Hitboxes[HitboxN]
+        Logger.print("SERVERDAMAGE", params.Damage)
         DamageFac.new({source = source, damage = params.Damage})
     end
 end
@@ -121,6 +123,7 @@ function module.ConnectInterrupt(j: Janitor.Janitor, thread: thread)
         elseif coroutine.status(thread) ~= "dead" then
             Logger.warn("Failed to close thread during interrupt!!!!!!!")
         end
+        Logger.warn("INTERRUPTED ON SERVER")
     end)
     j:Add(Cleanup, true)
 end

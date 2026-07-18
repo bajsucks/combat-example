@@ -2,9 +2,9 @@ local Config = {}
 
 Config.Keybindings = {
 	[Enum.UserInputType.MouseButton1] = "m1",
-	[Enum.UserInputType.MouseButton2] = "m2",
-	[Enum.KeyCode.R] = "r",
-	[Enum.KeyCode.H] = "h",
+	-- [Enum.UserInputType.MouseButton2] = "m2",
+	-- [Enum.KeyCode.R] = "r",
+	-- [Enum.KeyCode.H] = "h",
 }
 
 Config.Actions = {

@@ -14,7 +14,7 @@ export type state = "visual"|"replicated"|"real"
 
 local InputQuery = world
 :query(jecs.pair(InputCom.Pressing, jecs.w))
-:without(link.View, AttackCom.Blocking, AttackCom.InAttack, AttackCom.Interrupt, AttackCom.Stunned):cached()
+:without(AttackCom.Blocking, AttackCom.InAttack, AttackCom.Interrupt, AttackCom.Stunned):with(link.View):cached()
 
 if RunService:IsServer() then
     ReplicatedStorage.Remotes.Hitbox.OnServerEvent:Connect(AttackUtils.ReplicatedHitbox)
@@ -24,9 +24,10 @@ end
 return {function()
     for e: jecs.Entity in InputQuery do
         for id in world:targets(e, InputCom.Pressing) do
+            print("pressing")
             local Move = world:get(id, jecs.Name)
             local Map = AttackUtils.GetMap(e, Move)
-            if not Map then continue end
+            if not Map then warn("Missing map!"); continue end
             Map.Attack(e)
         end
     end

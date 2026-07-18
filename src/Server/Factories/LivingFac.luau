@@ -2,6 +2,7 @@ local Fac = {}
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LivingCom = require(ReplicatedStorage.Components.LivingCom)
+local link = require(ReplicatedStorage.Components.link)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
@@ -28,6 +29,7 @@ function Fac.new(e: jecs.Entity?, config: Config?)
 		Logger.warn("Tried to summon a living without a view!")
 		return e
 	end
+	world:set(e, link.View, View)
 	local MaxHealth = config.MaxHealth or 100
 	world:set(e, LivingCom.Health, MaxHealth)
 	world:set(e, LivingCom.MaxHealth, MaxHealth)
@@ -35,9 +37,10 @@ function Fac.new(e: jecs.Entity?, config: Config?)
 	world:set(e, LivingCom.QHeal, {})
 	View.Parent = workspace.entities
 	local guid = jUtil.GetGUID()
-	world:set(e, LivingCom.LivingGuid, jUtil.GetGUID())
+	world:set(e, LivingCom.LivingGuid, guid)
 	View:SetAttribute("LivingGuid", guid)
 	LivingIndex:Set(e, guid)
+	-- livingindex doesn't have or livingguid is corrupt btw
 
 	world:set(e, mirrorTCP.Networked)
 	return e
@@ -48,6 +51,9 @@ end
     Note that `mirrorTCP.Networked` component will stay on the entity.
 ]]
 function Fac.Destroy(e: jecs.Entity)
+	LivingIndex:Set(e, nil)
+	local View = world:get(e, link.View)
+	View:SetAttribute("LivingGuid", nil)
 	world:remove(e, LivingCom.Health)
 	world:remove(e, LivingCom.MaxHealth)
 	world:remove(e, LivingCom.IsDead)
