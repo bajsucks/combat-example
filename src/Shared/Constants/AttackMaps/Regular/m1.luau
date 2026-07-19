@@ -4,11 +4,11 @@ local AttackCom = require(ReplicatedStorage.Components.AttackCom)
 local link = require(ReplicatedStorage.Components.link)
 local DamageFac = require(ReplicatedStorage.Factories.DamageFac)
 local AttackUtils = require(ReplicatedStorage.Modules.AttackUtils)
+local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
 local jecs = require(ReplicatedStorage.Packages.jecs)
-local AttackSys = require(ReplicatedStorage.Systems.AttackSys)
 local world = WorldProvider.Get("Main")
 
 local module = {}
@@ -21,13 +21,6 @@ module.Hitboxes = {
     }
 }
 
-type state = AttackSys.state
---[[
-    visual - client does windup and hitbox, (if hit remotes to server) then does endlag according to hit or not
-    replicated - when receiving remote from client, sanity checks it and does damage, then replicates vfx to all other people
-    real - visual + replicated happening in the same place
-]]
-
 local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: boolean?)
     if Replicated then return {} end
     local params = module.Hitboxes[n]
@@ -37,10 +30,17 @@ local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: b
     local hits = {}
     for _, v in p do
         if v == View then continue end
-        local guid = View:GetAttribute("LivingGuid")
+        local guid = v:GetAttribute("LivingGuid")
         if not guid then Logger.warn("No living GUID"); continue end
-        Logger.print("DAMAGE", v.Name)
-        DamageFac.new({source = source, damage = params.Damage})
+        Logger.print("actual found guid:", guid)
+        local eTarget = IndexerUtils.LivingByGuid(guid)
+        Logger.print(eTarget)
+        Logger.print("CLIENT DAMAGE TO", v.Name)
+        if RunService:IsClient() then
+            DamageFac.new({damage = params.Damage, target = eTarget})
+        else
+            DamageFac.new({source = source, damage = params.Damage, target = eTarget})
+        end
         table.insert(hits, guid)
     end
     if RunService:IsClient() then

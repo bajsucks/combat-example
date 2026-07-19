@@ -10,8 +10,6 @@ local jecs = require(ReplicatedStorage.Packages.jecs)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world: jecs.World = WorldProvider.Get("Main")
 
-export type state = "visual"|"replicated"|"real"
-
 local InputQuery = world
 :query(jecs.pair(InputCom.Pressing, jecs.w))
 :without(AttackCom.Blocking, AttackCom.InAttack, AttackCom.Interrupt, AttackCom.Stunned):with(link.View):cached()

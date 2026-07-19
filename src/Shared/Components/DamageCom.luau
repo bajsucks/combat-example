@@ -11,6 +11,7 @@ local world: jecs.World = WorldProvider.Get("Main")
 local Replicated = {
     -- Components
     source = world:component() :: jecs.Entity<jecs.Entity>,
+    target = world:component() :: jecs.Entity<jecs.Entity>,
     damage = world:component() :: jecs.Entity<number>,
     --todo: add heal
     
@@ -24,6 +25,7 @@ local Static = {
     -- Components
 
     -- Tags
+    ReplicationAwait = world:entity() :: jecs.Entity<nil>
 
     -- Relationships
     

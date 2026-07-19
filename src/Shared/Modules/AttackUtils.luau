@@ -111,7 +111,9 @@ function module.ReplicatedHitbox(Player: Player, Move:string, HitboxN: number, H
         if not Map then return end
         local params = Map.Hitboxes[HitboxN]
         Logger.print("SERVERDAMAGE", params.Damage)
-        DamageFac.new({source = source, damage = params.Damage})
+        for _, guid in Hits do
+            DamageFac.new({source = source, damage = params.Damage, target = IndexerUtils.LivingByGuid(guid)})
+        end
     end
 end
 

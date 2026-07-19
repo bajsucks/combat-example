@@ -33,6 +33,7 @@ return {function()
 	if #DeadQueue > 0 then
 		for _, e in DeadQueue do
 			world:add(e, LivingCom.IsDead)
+			print("set IsDead")
 		end
 		table.clear(DeadQueue)
 	end
