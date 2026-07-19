@@ -1,13 +1,25 @@
 # Example combat game
 
-That's an ECS game
+This is an adaptable ECS combat system I made as a template to use in future projects.
+Notes about the combat system:
+- Hitboxes are fully client sided (what you see is what you get), but can still be used on server
+- Server verifies the hitbox results
+- You can spawn dummies using F4 -> `dummy`
+- VFX is instant on the client and is also replicated to all other clients
 
 ## Basic instructions
-You can build the project using `argon build` or, in Visual Studio Code, Ctrl + Shift + P -> Argon: Open Menu -> Build
+You can download the .rbxl in the Releases tab.
+You can also build the project yourself using `rojo build -o build.rbxl`, but it will lack cooldown ScreenGUI and a baseplate.
 
-Note that if built from source, the place will only contain scripts!
+### Combat system features
+- Stun
+- Healthbars
+- Cooldowns
+- Hitbox visualizer
+- Admin panel
+- Dummies
 
-### Info
+### ECS Template info
 Contains modules:
 
 - Server, client and shared environment
