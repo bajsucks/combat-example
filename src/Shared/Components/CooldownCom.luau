@@ -7,21 +7,11 @@ local jecs = require(ReplicatedStorage.Packages.jecs)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
 local world: jecs.World = WorldProvider.Get("Main")
 
-export type AAT = {[number]: thread|(jecs.Entity)->()} -- Active Attack Thread
-
 -- NEVER allow for the same index to appear twice
 local Replicated = {
     -- Components
-    Fighter = world:component() :: jecs.Entity<string>,
     
     -- Tags
-    Blocking = world:entity() :: jecs.Entity<nil>,
-    Parry = world:entity() :: jecs.Entity<nil>,
-    IFrame = world:entity() :: jecs.Entity<nil>,
-    Stunned = world:entity() :: jecs.Entity<nil>,
-    SuperArmor = world:entity() :: jecs.Entity<nil>,
-    Interrupt = world:entity() :: jecs.Entity<nil>, -- testing purposes
-    InAttack = world:entity() :: jecs.Entity<nil>,
     
     -- Relationships
     
@@ -29,8 +19,7 @@ local Replicated = {
 
 local Static = {
     -- Components
-    m1Combo = world:component() :: jecs.Entity<number>,
-    jacc = world:component() :: jecs.Entity<number>, -- jAntiCheat counter.    
+    Cooldowns = world:component() :: jecs.Entity<{[string]: number}>
 
     -- Tags
 

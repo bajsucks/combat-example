@@ -4,6 +4,7 @@ local AttackCom = require(ReplicatedStorage.Components.AttackCom)
 local link = require(ReplicatedStorage.Components.link)
 local DamageFac = require(ReplicatedStorage.Factories.DamageFac)
 local AttackUtils = require(ReplicatedStorage.Modules.AttackUtils)
+local Cooldowns = require(ReplicatedStorage.Modules.Cooldowns)
 local IndexerUtils = require(ReplicatedStorage.Modules.IndexerUtils)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
@@ -52,7 +53,24 @@ end
 
 function module.Attack(source: jecs.Entity, Replicated:boolean)
     world:add(source, AttackCom.InAttack)
-    local View = world:get(source, link.View)
+    local View, m1Combo = world:get(source, link.View, AttackCom.m1Combo)
+    m1Combo = m1Combo or 1
+    local function Cooldown()
+        world:remove(source, AttackCom.m1Combo)
+        Logger.print("Set cooldown")
+        Cooldowns.SetCooldown(source, "m1")
+    end
+    if m1Combo == 4 then
+        Cooldown()
+    else
+        m1Combo += 1
+        world:set(source, AttackCom.m1Combo, m1Combo)
+        task.delay(1, function()
+            if world:get(source, AttackCom.m1Combo) == m1Combo then
+                Cooldown()
+            end
+        end)
+    end
     local j = Janitor.new()
     if RunService:IsClient() then
         ReplicatedStorage.Remotes.Windup:FireServer("m1")

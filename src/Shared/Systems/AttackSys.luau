@@ -5,6 +5,8 @@ local AttackCom = require(ReplicatedStorage.Components.AttackCom)
 local InputCom = require(ReplicatedStorage.Components.InputCom)
 local link = require(ReplicatedStorage.Components.link)
 local AttackUtils = require(ReplicatedStorage.Modules.AttackUtils)
+local Cooldowns = require(ReplicatedStorage.Modules.Cooldowns)
+local Logger = require(ReplicatedStorage.Modules.Logger)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
@@ -22,8 +24,9 @@ end
 return {function()
     for e: jecs.Entity in InputQuery do
         for id in world:targets(e, InputCom.Pressing) do
-            print("pressing")
             local Move = world:get(id, jecs.Name)
+            if Cooldowns.IsOnCooldown(e, Move) then continue end
+            Logger.warn("Free of any cooldowns")
             local Map = AttackUtils.GetMap(e, Move)
             if not Map then warn("Missing map!"); continue end
             Map.Attack(e)
