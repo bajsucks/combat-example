@@ -18,11 +18,12 @@ local LocalDamageQuery = world
 :query(DamageCom.damage, DamageCom.target)
 :without(DamageCom.source, DamageCom.ReplicationAwait):cached()
 
-local function PlayVfx(target: jecs.Entity, Damage: number)
-    
+local function PlayVfx()
+    -- target: jecs.Entity, Damage: number
+    -- TODO?
 end
 
-return {function(dt: number)
+return {function()
     for eDmg: jecs.Entity, Damage: number, source: jecs.Entity, target: jecs.Entity in DamageQuery do
         if RunService:IsServer() then
             world:add(eDmg, DamageCom.ReplicationAwait)
