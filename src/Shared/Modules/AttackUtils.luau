@@ -10,6 +10,7 @@ local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
 local jUtil = require(ReplicatedStorage.Packages.jTools.jUtil)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 local Logger = require(script.Parent.Logger)
+local SM = require(script.Parent.SM)
 local module = {}
 local WorldProvider = require(script.Parent.WorldProvider)
 local world = WorldProvider.Get("Main")
@@ -55,8 +56,8 @@ end
 function module.Sanitycheck(source: jecs.Entity, Move: string, HitboxN: number?, Hits:{string})
     local View: Model?, Player: Player?, Fighter: string? = world:get(source, link.View, PlayerCom.Player, AttackCom.Fighter)
     if not View or not Player or not Fighter then log("Invalid 1"); return end
-    local Stun = world:has(source, AttackCom.Blocking, AttackCom.Stunned, AttackCom.Interrupt)
-    if Stun then log("Invalid: stun"); return end
+    local Stunned = world:has(source, AttackCom.Blocking, AttackCom.Stunned)
+    if Stunned then log("Invalid: stun"); return end
     if not HitboxN and not Hits then -- if it's windup and you're already inattack you're cooked
         if world:has(source, AttackCom.InAttack) then log("Invalid: inattack"); return end
     end
@@ -111,14 +112,19 @@ function module.ReplicatedHitbox(Player: Player, Move:string, HitboxN: number, H
         if not Map then return end
         local params = Map.Hitboxes[HitboxN]
         Logger.print("SERVERDAMAGE", params.Damage)
+        local Stun = params.Stun
         for _, guid in Hits do
             DamageFac.new({source = source, damage = params.Damage, target = IndexerUtils.LivingByGuid(guid)})
+            if Stun then
+                SM.SetTimer(source, Move, AttackCom.Stunned, nil, Stun)
+            end
         end
     end
 end
 
-function module.ConnectInterrupt(j: Janitor.Janitor, thread: thread)
-    local Cleanup = world:added(AttackCom.Interrupt, function()
+function module.ConnectInterrupt(source: jecs.Entity, j: Janitor.Janitor, thread: thread)
+    local Cleanup = world:added(AttackCom.Stunned, function(e: jecs.Entity)
+        if source ~= e then return end
         j:Destroy()
         if coroutine.status(thread) == "suspended" then
             coroutine.close(thread)

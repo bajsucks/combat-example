@@ -20,7 +20,6 @@ local Replicated = {
     IFrame = world:entity() :: jecs.Entity<nil>,
     Stunned = world:entity() :: jecs.Entity<nil>,
     SuperArmor = world:entity() :: jecs.Entity<nil>,
-    Interrupt = world:entity() :: jecs.Entity<nil>, -- testing purposes
     InAttack = world:entity() :: jecs.Entity<nil>,
     
     -- Relationships

@@ -14,7 +14,7 @@ local world: jecs.World = WorldProvider.Get("Main")
 
 local InputQuery = world
 :query(jecs.pair(InputCom.Pressing, jecs.w))
-:without(AttackCom.Blocking, AttackCom.InAttack, AttackCom.Interrupt, AttackCom.Stunned):with(link.View):cached()
+:without(AttackCom.Blocking, AttackCom.InAttack, AttackCom.Stunned):with(link.View):cached()
 
 if RunService:IsServer() then
     ReplicatedStorage.Remotes.Hitbox.OnServerEvent:Connect(AttackUtils.ReplicatedHitbox)
@@ -26,9 +26,8 @@ return {function()
         for id in world:targets(e, InputCom.Pressing) do
             local Move = world:get(id, jecs.Name)
             if Cooldowns.IsOnCooldown(e, Move) then continue end
-            Logger.warn("Free of any cooldowns")
             local Map = AttackUtils.GetMap(e, Move)
-            if not Map then warn("Missing map!"); continue end
+            if not Map then Logger.warn("Missing map!"); continue end
             Map.Attack(e)
         end
     end

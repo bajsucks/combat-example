@@ -18,7 +18,8 @@ module.Hitboxes = {
     {
         Damage = 5,
         Size = Vector3.one*3,
-        Offset = -Vector3.zAxis*3.5
+        Offset = -Vector3.zAxis*3.5,
+        Stun = 0.2
     }
 }
 
