@@ -34,9 +34,7 @@ local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: b
         if v == View then continue end
         local guid = v:GetAttribute("LivingGuid")
         if not guid then Logger.warn("No living GUID"); continue end
-        Logger.print("actual found guid:", guid)
         local eTarget = IndexerUtils.LivingByGuid(guid)
-        Logger.print(eTarget)
         Logger.print("CLIENT DAMAGE TO", v.Name)
         if RunService:IsClient() then
             DamageFac.new({damage = params.Damage, target = eTarget})
@@ -80,12 +78,15 @@ function module.Attack(source: jecs.Entity, Replicated:boolean)
         task.wait(0.05)
         hitbox(source, View, 1, Replicated)
         task.wait(0.05)
+        j:Destroy()
+    end)
+    local function OnInterrupt()
         if RunService:IsServer() then
             world:remove(source, AttackCom.InAttack)
         end
-        j:Destroy()
-    end)
-    AttackUtils.ConnectInterrupt(j, thread)
+    end
+    j:Add(OnInterrupt, true)
+    AttackUtils.ConnectInterrupt(source, j, thread)
 end
 
 return module

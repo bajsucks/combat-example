@@ -17,7 +17,7 @@ type Config = {
 
 function Fac.new(config: Config)
     local e = world:entity()
-    if not config.damage or not config.target then Logger.warn("BAHH") end
+    if not config.damage or not config.target then Logger.warn("BAHH DAMAGEFAC") end
     if config.source then
         world:set(e, DamageCom.source, config.source)
     end

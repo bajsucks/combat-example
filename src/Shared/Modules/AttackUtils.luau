@@ -114,9 +114,10 @@ function module.ReplicatedHitbox(Player: Player, Move:string, HitboxN: number, H
         Logger.print("SERVERDAMAGE", params.Damage)
         local Stun = params.Stun
         for _, guid in Hits do
-            DamageFac.new({source = source, damage = params.Damage, target = IndexerUtils.LivingByGuid(guid)})
+            local Target = IndexerUtils.LivingByGuid(guid)
+            DamageFac.new({source = source, damage = params.Damage, target = Target})
             if Stun then
-                SM.SetTimer(source, Move, AttackCom.Stunned, nil, Stun)
+                SM.SetTimer(Target, Move, {AttackCom.Stunned}, nil, Stun)
             end
         end
     end
@@ -125,6 +126,7 @@ end
 function module.ConnectInterrupt(source: jecs.Entity, j: Janitor.Janitor, thread: thread)
     local Cleanup = world:added(AttackCom.Stunned, function(e: jecs.Entity)
         if source ~= e then return end
+        warn("Interrupted")
         j:Destroy()
         if coroutine.status(thread) == "suspended" then
             coroutine.close(thread)
