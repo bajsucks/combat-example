@@ -21,7 +21,6 @@ local jecs = require(ReplicatedStorage.Packages.jecs)
 local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
-local EasyRagdoll = require(ReplicatedStorage.Packages.EasyRagdoll)
 local conch = require(ReplicatedStorage.Packages.conch)
 local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
 local world: jecs.World = WorldProvider.Get("Main")

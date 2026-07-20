@@ -35,6 +35,9 @@
       },
       "ConchCommands": {
         "$path": "src/Shared/ConchCommands"
+      },
+      "JABBY_REMOTES": {
+        "$path": "src/Shared/JABBY_REMOTES.rbxm"
       }
     },
     "ServerScriptService": {
