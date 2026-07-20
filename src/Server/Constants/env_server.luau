@@ -10,5 +10,5 @@ return {
 
 	conch_superuser_in_studio = true, -- Whether all players should get `super-user` conch permissions when running in Studio
 
-	conch_superuser_any = false, -- DANGER WARNING SCARY do not turn on unless you know what you are doing! This will give `super-user` conch permissions to EVERYONE, even in LIVE
+	conch_superuser_any = true, -- DANGER WARNING SCARY do not turn on unless you know what you are doing! This will give `super-user` conch permissions to EVERYONE, even in LIVE
 }

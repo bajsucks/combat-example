@@ -75,7 +75,7 @@ function module.CreateCooldownVisuals(Source, Keybind)
     local c = Cooldowns[Fighter]
 	c[Keybind] = workspace:GetServerTimeNow() + CooldownDuration
     if not VisualName then return end
-    local ui = ReplicatedStorage.Assets.cooldown:Clone()
+    local ui = ReplicatedStorage.Assets.CooldownsScreen:Clone()
     ui.Parent = jUtil.GetLocalPlayerGui().Cooldowns
     ui.n.Text = VisualName
     ui.bar.c.Text = jUtil.Abr(CooldownDuration)
