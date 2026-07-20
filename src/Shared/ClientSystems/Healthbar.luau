@@ -3,7 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HealthbarCom = require(ReplicatedStorage.Components.HealthbarCom)
 local LivingCom = require(ReplicatedStorage.Components.LivingCom)
 local link = require(ReplicatedStorage.Components.link)
-local Logger = require(ReplicatedStorage.Modules.Logger)
 local jecs = require(ReplicatedStorage.Packages.jecs)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
@@ -23,7 +22,6 @@ local HealthbarRemoveQuery = world
 
 local function UpdateHealthbar(e:jecs.Entity, Healthbar:BillboardGui, Health:number, MaxHealth:number)
     local IsDead = world:has(e, LivingCom.IsDead)
-    Logger.print(Health, MaxHealth)
     if not IsDead then
         Healthbar.hp.Text = `{jUtil.Abr(Health)}/{jUtil.Abr(MaxHealth)}`
     else
@@ -47,8 +45,6 @@ world:added(LivingCom.LivingGuid, function(e: jecs.Entity, _, guid)
         if View:GetAttribute("LivingGuid") == guid then
             world:set(e, link.View, View)
             LivingIndex:Set(e, guid)
-            Logger.print("Set", guid)
-            Logger.print("set livingguid")
             break
         end
     end

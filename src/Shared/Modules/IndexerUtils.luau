@@ -15,9 +15,6 @@ function module.LivingByView(View:Instance)
     if not View then warn("No view!"); return end
     local Guid = View:GetAttribute("LivingGuid")
     if not Guid then Logger.warn("No LivingGuid attribute!"); return end
-    Logger.warn("Guid exists, bruh", Guid)
-    Logger.warn(LivingIndex:First(Guid))
-    -- problem: client LivingIndex doesn't actually have living people bruh
     return LivingIndex:First(Guid)
 end
 

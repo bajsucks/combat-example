@@ -14,7 +14,7 @@ local world = WorldProvider.Get("Main")
 function module.IsOnCooldown(Source, Keybind)
     local Cooldowns, Fighter = world:get(Source, CooldownCom.Cooldowns, AttackCom.Fighter)
     if not Fighter then
-        Logger.warn("Something went wrong btw");
+        Logger.warn("Something went wrong with Fighter component btw")
         return false 
     end
     if not Cooldowns then
@@ -39,7 +39,7 @@ function module.SetCooldown(Source, Keybind)
         world:set(Source, CooldownCom.Cooldowns, Cooldowns)
     end
     if not Fighter then
-        Logger.warn("Something went wrong btw");
+        Logger.warn("Something went wrong with Fighter component btw")
         return false 
     end
     if not Cooldowns[Fighter] then
@@ -64,7 +64,6 @@ function module.CreateCooldownVisuals(Source, Keybind)
         Cooldowns = {}
         world:set(Source, CooldownCom.Cooldowns, Cooldowns)
     end
-    Logger.warn(debug.info)
     local cInfo = CombatInfo[Fighter][Keybind]
     if not cInfo.Cooldown then Logger.warn(Keybind, "is missing cooldown info!"); return end
     local CooldownDuration = cInfo.Cooldown + CooldownAddConst

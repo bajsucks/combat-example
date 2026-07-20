@@ -1,15 +1,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local jecs = require(ReplicatedStorage.Packages.jecs)
+local WorldProvider = require(script.Parent.WorldProvider)
+local world = WorldProvider.Get("Main")
 local SM = {}
 SM.States = {}
 
 local function GetStates(e: jecs.Entity)
-	local s = SM.States[e]
-	if not s then
+	if not SM.States[e] then
 		SM.States[e] = {}
 	end
-	return s
+	return SM.States[e]
 end
 
 --[[
@@ -29,7 +30,7 @@ function SM.Set(e: jecs.Entity, StateId: string, Tags: {}, CheckFn: (e: jecs.Ent
 		CheckFn = CheckFn,
 	}
 	for _, v in Tags do
-		e:Add(v)
+		world:add(e, v)
 	end
 	return function()
 		SM.Rm(e, StateId)
@@ -54,7 +55,7 @@ function SM.SetTimer(e: jecs.Entity, StateId: string, Tags: {}, CheckFn: (e: jec
 		TimeGoal = os.clock() + Time,
 	}
 	for _, v in Tags do
-		e:Add(v)
+		world:add(e, v)
 	end
 	return function()
 		SM.Rm(e, StateId)
@@ -80,7 +81,7 @@ function SM.SetFrames(e: jecs.Entity, StateId: string, Tags: {}, CheckFn: (e: je
 		FramesNow = 0,
 	}
 	for _, v in Tags do
-		e:Add(v)
+		world:add(e, v)
 	end
 	return function()
 		SM.Rm(e, StateId)
@@ -112,7 +113,7 @@ function SM.Rm(e: jecs.Entity, StateId: string)
 		end
 	end
 	for i in ToRemove do
-		e:Remove(i)
+		world:remove(e, i)
 	end
 end
 
