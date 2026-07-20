@@ -61,6 +61,9 @@
       "StarterPlayerScripts": {
         "$path": "src/Client"
       }
+    },
+    "StarterGui": {
+      "$path": "src/StarterGui"
     }
   }
 }
