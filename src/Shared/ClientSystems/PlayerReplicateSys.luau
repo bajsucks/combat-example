@@ -3,7 +3,6 @@
 ]]
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local link = require(ReplicatedStorage.Components.link)
 local Indexer = require(ReplicatedStorage.Modules.Indexer)

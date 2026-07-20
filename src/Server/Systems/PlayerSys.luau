@@ -3,11 +3,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local LivingCom = require(ReplicatedStorage.Components.LivingCom)
 local env_server = require(ServerStorage.Constants.env_server)
 local AttackFac = require(ServerStorage.Factories.AttackFac)
 local LivingFac = require(ServerStorage.Factories.LivingFac)
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
 local link = require(ReplicatedStorage.Components.link)
+local EUtil = require(ReplicatedStorage.Modules.EUtil)
 local Indexer = require(ReplicatedStorage.Modules.Indexer)
 local Logger = require(ReplicatedStorage.Modules.Logger)
 local Relay = require(ReplicatedStorage.Modules.Relay)
@@ -19,7 +21,9 @@ local jecs = require(ReplicatedStorage.Packages.jecs)
 local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
+local EasyRagdoll = require(ReplicatedStorage.Packages.EasyRagdoll)
 local conch = require(ReplicatedStorage.Packages.conch)
+local Janitor = require(ReplicatedStorage.Packages.jTools.Janitor)
 local world: jecs.World = WorldProvider.Get("Main")
 
 Players.PlayerAdded:Connect(function(Player)
@@ -52,6 +56,8 @@ end
 game:BindToClose(BindToClose)
 Players.PlayerRemoving:Connect(PlayerRemoving)
 
+Players.CharacterAutoLoads = false
+
 ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 	Logger.print(`Received player loaded for {Player.DisplayName}!`)
 	local e = UserIdIndex:First(Player.UserId)
@@ -71,16 +77,25 @@ ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 	local Name = Player.DisplayName == Player.Name and Player.DisplayName or `{Player.DisplayName} ({Player.Name})`
 	Logger.print(`Player {Name} was hydrated successfully`)
 	world:add(e, PlayerCom.Hydrated)
+	local j = Janitor.new()
+	local j2 = Janitor.new()
 	local function Spawn(Char)
+		local Hum: Humanoid = Char.Humanoid
+		Hum.BreakJointsOnDeath = false
 		world:set(e, link.View, Char)
 		LivingFac.Destroy(e)
 		AttackFac.Destroy(e)
 		LivingFac.new(e, {View = Player.Character})
 		AttackFac.new(e)
+		j2:Add(Hum.Died:Once(function()
+			world:set(e, LivingCom.Health, 0)
+			EUtil.AddToQueue(e, LivingCom.QDamage, 99999)
+		end))
 	end
-	local c = Player.CharacterAdded:Connect(function(Char)
+	Player:LoadCharacterAsync()
+	j:Add(Player.CharacterAdded:Connect(function(Char)
 		Spawn(Char)
-	end)
+	end))
 	if Player.Character then
 		Spawn(Player.Character)
 	else
@@ -88,7 +103,7 @@ ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 	end
 	Players.PlayerRemoving:Once(function(p)
 		if p == Player then
-			c:Disconnect()
+			j:Destroy()
 		end
 	end)
 	if (RunService:IsStudio() and env_server.conch_superuser_in_studio) or env_server.conch_superuser_any then
