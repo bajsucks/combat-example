@@ -1,3 +1,4 @@
+[Play the demo build here](https://www.roblox.com/games/84217177218429/Combat-demo)
 # Example combat game
 
 This is an adaptable ECS combat system I made as a template to use in future projects.
