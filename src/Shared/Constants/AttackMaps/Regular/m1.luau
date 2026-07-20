@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local AttackCom = require(ReplicatedStorage.Components.AttackCom)
+local LivingCom = require(ReplicatedStorage.Components.LivingCom)
 local link = require(ReplicatedStorage.Components.link)
 local DamageFac = require(ReplicatedStorage.Factories.DamageFac)
 local AttackUtils = require(ReplicatedStorage.Modules.AttackUtils)
@@ -35,6 +36,7 @@ local function hitbox(source: jecs.Entity, View: Model, n: number, Replicated: b
         local guid = v:GetAttribute("LivingGuid")
         if not guid then Logger.warn("No living GUID"); continue end
         local eTarget = IndexerUtils.LivingByGuid(guid)
+        if world:has(eTarget, LivingCom.IsDead) then continue end
         Logger.print("CLIENT DAMAGE TO", v.Name)
         if RunService:IsClient() then
             DamageFac.new({damage = params.Damage, target = eTarget})

@@ -1,8 +1,10 @@
---!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LivingCom = require(ReplicatedStorage.Components.LivingCom)
+local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
+local link = require(ReplicatedStorage.Components.link)
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
+local EasyRagdoll = require(ReplicatedStorage.Packages.EasyRagdoll)
 local world = WorldProvider.Get("Main")
 
 local DamageQuery = world:query(LivingCom.Health, LivingCom.QDamage):without(LivingCom.IsDead):cached()
@@ -33,7 +35,18 @@ return {function()
 	if #DeadQueue > 0 then
 		for _, e in DeadQueue do
 			world:add(e, LivingCom.IsDead)
-			print("set IsDead")
+			local Char: Model?, Player: Player? = world:get(e, link.View, PlayerCom.Player)
+			if Char then
+				EasyRagdoll.SetRagdoll(Char, true, true, 100)
+				task.delay(1.5, function()
+					Char:Destroy()
+					if Player then
+						Player:LoadCharacterAsync()
+					else
+						world:delete(e)
+					end
+				end)
+			end
 		end
 		table.clear(DeadQueue)
 	end

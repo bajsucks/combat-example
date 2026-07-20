@@ -53,7 +53,9 @@ end
 function Fac.Destroy(e: jecs.Entity)
 	LivingIndex:Set(e, nil)
 	local View = world:get(e, link.View)
-	View:SetAttribute("LivingGuid", nil)
+	if View then
+		View:SetAttribute("LivingGuid", nil)
+	end
 	world:remove(e, LivingCom.Health)
 	world:remove(e, LivingCom.MaxHealth)
 	world:remove(e, LivingCom.IsDead)

@@ -24,11 +24,13 @@ local function UpdateHealthbar(e:jecs.Entity, Healthbar:BillboardGui, Health:num
     local IsDead = world:has(e, LivingCom.IsDead)
     if not IsDead then
         Healthbar.hp.Text = `{jUtil.Abr(Health)}/{jUtil.Abr(MaxHealth)}`
+        Healthbar.fill.Size = UDim2.fromScale(math.clamp(Health/MaxHealth, 0, 1), 1)
+        return
     else
         Healthbar.hp.Text = "Dead"
+        Healthbar.fill.Size = UDim2.fromScale(0, 1)
+        return
     end
-    Healthbar.fill.Size = UDim2.fromScale(math.clamp(Health/MaxHealth, 0, 1), 1)
-    -- fill not changing size for some reason?
 end
 
 local function HealthbarFn(e)
@@ -37,9 +39,17 @@ local function HealthbarFn(e)
     UpdateHealthbar(e, Healthbar, Health, MaxHealth)
 end
 
+local function RemoveHealthbar(e, Healthbar)
+    if not Healthbar then Healthbar = world:get(e, HealthbarCom.Healthbar) end
+    if Healthbar then
+        Healthbar:Destroy()
+    end
+    world:remove(e, HealthbarCom.Healthbar)
+end
+
 world:changed(LivingCom.Health, HealthbarFn)
 world:added(LivingCom.IsDead, HealthbarFn)
-world:removed(LivingCom.IsDead, HealthbarFn)
+world:removed(LivingCom.IsDead, function(e) RemoveHealthbar(e) end)
 world:added(LivingCom.LivingGuid, function(e: jecs.Entity, _, guid)
     for _, View:Instance in workspace.entities:GetChildren() do
         if View:GetAttribute("LivingGuid") == guid then
@@ -59,7 +69,6 @@ return {function()
         world:set(e, HealthbarCom.Healthbar, Healthbar)
     end
     for e: jecs.Entity, Healthbar: BillboardGui in HealthbarRemoveQuery do
-        Healthbar:Destroy()
-        world:remove(e, HealthbarCom.Healthbar)
+        RemoveHealthbar(e, Healthbar)
     end
 end, -1, "postsim"}
