@@ -25,6 +25,8 @@ do
 	end
 end
 
+local Benchmark = require(script.Parent.Benchmark)
+local Logger = require(script.Parent.Logger)
 local Relay = require(ReplicatedStorage.Modules.Relay)
 local conch = require(ReplicatedStorage.Packages.conch)
 -- simulation and order
@@ -37,6 +39,13 @@ if RunService:IsClient() then
 			local fn, priority, phase = table.unpack(require(Inst))
 			if not fn then return end
 			tbl[phase] = tbl[phase] or {}
+			local n = Inst.Name
+			if Logger.isDebug() then
+				local MOD_fn = fn
+				fn = function(dt)
+					Benchmark.Bench(MOD_fn, dt, n)
+				end
+			end
 			table.insert(tbl[phase], {fn, priority})
 		end
 	end
@@ -72,6 +81,7 @@ if RunService:IsClient() then
 			for _, fntbl in tbl.postreplication do
 				fntbl[1](dt)
 			end
+			Benchmark.LogIfOverEnv()
 		end)
 	end)
 	ReplicatedStorage.Remotes.ReplicateTCP.OnClientEvent:Connect(Relay.ApplyTCP)
@@ -97,6 +107,13 @@ else
 			local fn, priority, phase = table.unpack(require(Inst))
 			if not fn then return end
 			tbl[phase] = tbl[phase] or {}
+			local n = Inst.Name
+			if Logger.isDebug() then
+				local MOD_fn = fn
+				fn = function(dt)
+					Benchmark.Bench(MOD_fn, dt, n)
+				end
+			end
 			table.insert(tbl[phase], {fn, priority})
 		end
 	end
@@ -123,6 +140,7 @@ else
 		for _, fntbl in tbl.postreplication do
 			fntbl[1](dt)
 		end
+		Benchmark.LogIfOverEnv()
 	end)
 
 	for _, command in ReplicatedStorage.ConchCommands:GetChildren() do
