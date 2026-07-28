@@ -55,6 +55,9 @@
       },
       "Modules": {
         "$path": "src/Server/Modules"
+      },
+      "Assets": {
+        "$path": "src/ServerAssets"
       }
     },
     "StarterPlayer": {

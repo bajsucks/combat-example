@@ -3,9 +3,7 @@
 That's an ECS game
 
 ## Basic instructions
-You can build the project using `argon build` or, in Visual Studio Code, Ctrl + Shift + P -> Argon: Open Menu -> Build
-
-Note that if built from source, the place will only contain scripts!
+clone the repo and sync with rojo in a local place
 
 ### Info
 Contains modules:

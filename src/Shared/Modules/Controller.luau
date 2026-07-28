@@ -146,7 +146,7 @@ else
 	for _, command in ReplicatedStorage.ConchCommands:GetChildren() do
 		command = require(command)
 		conch.register(command[1], command[2])
-		print("registered", command)
+		Logger.print("registered", command)
 	end
 end
 
