@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local env_server = require(ServerStorage.Constants.env_server)
 local AttackFac = require(ServerStorage.Factories.AttackFac)
 local LivingFac = require(ServerStorage.Factories.LivingFac)
 local PlayerCom = require(ReplicatedStorage.Components.PlayerCom)
@@ -17,6 +19,7 @@ local jecs = require(ReplicatedStorage.Packages.jecs)
 local UserIdIndex = Indexer.new(PlayerCom.UserId)
 
 local WorldProvider = require(ReplicatedStorage.Modules.WorldProvider)
+local conch = require(ReplicatedStorage.Packages.conch)
 local world: jecs.World = WorldProvider.Get("Main")
 
 Players.PlayerAdded:Connect(function(Player)
@@ -88,6 +91,10 @@ ReplicatedStorage.Remotes.PlayerLoaded.OnServerEvent:Connect(function(Player)
 			c:Disconnect()
 		end
 	end)
+	if (RunService:IsStudio() and env_server.conch_superuser_in_studio) or env_server.conch_superuser_any then
+		local user = conch.get_user(Player)
+		conch.give_roles(user, "admin")
+	end
 end)
 
 return {}

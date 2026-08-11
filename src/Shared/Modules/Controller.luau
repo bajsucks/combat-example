@@ -26,11 +26,11 @@ do
 end
 
 local Relay = require(ReplicatedStorage.Modules.Relay)
-
+local conch = require(ReplicatedStorage.Packages.conch)
 -- simulation and order
 if RunService:IsClient() then
 	local Input = require(ReplicatedStorage.Modules.Input)
-
+	
 	local tbl = {prerender = {}, presim = {}, postsim = {}, postreplication = {}}
 	local function get(Inst)
 		if Inst:IsA("ModuleScript") then
@@ -124,6 +124,12 @@ else
 			fntbl[1](dt)
 		end
 	end)
+
+	for _, command in ReplicatedStorage.ConchCommands:GetChildren() do
+		command = require(command)
+		conch.register(command[1], command[2])
+		print("registered", command)
+	end
 end
 
 return module
