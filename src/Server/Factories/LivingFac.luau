@@ -37,8 +37,11 @@ function Fac.new(e: jecs.Entity?, config: Config?)
 	world:set(e, LivingCom.QHeal, {})
 	View.Parent = workspace.entities
 	local guid = jUtil.GetGUID()
+	print("Generated guid", guid)
 	world:set(e, LivingCom.LivingGuid, guid)
 	View:SetAttribute("LivingGuid", guid)
+	print(View, guid)
+	print("SET", e, guid)
 	LivingIndex:Set(e, guid)
 
 	world:set(e, mirrorTCP.Networked)
