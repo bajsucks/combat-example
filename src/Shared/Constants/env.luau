@@ -10,5 +10,4 @@ return {
 		-- 1: include the script name and line number
 		-- 2: include the entire call stack
 	},
-	Skyline = 100 -- Troop spawn raycasts will fire from this height straight down
 }
